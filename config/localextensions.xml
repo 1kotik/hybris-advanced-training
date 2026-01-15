@@ -8,11 +8,16 @@
     <extension name='commerceservices' />
     <extension name='commercefacades' />
     <extension name='basecommerce' />
+    <extension name='customerreview' />
+    <extension name='payment' />
+    <extension name='promotions' /> <extension name='voucher' />    <extension name='wishlist' />
+
     <extension name='acceleratorservices' />
     <extension name='acceleratorfacades' />
     <extension name='acceleratorcms' />
     <extension name='acceleratorstorefrontcommons' />
     <extension name='addonsupport' />
+    <extension name="assistedservicestorefront"/>
 
     <extension name='cms2' />
     <extension name='cms2lib' />
@@ -23,6 +28,9 @@
     <extension name='solrfacetsearchbackoffice' />
     <extension name='solrserver' />
     <extension name='backofficesolrsearch' />
+    <extension name='adaptivesearch' />
+    <extension name='adaptivesearchbackoffice' />
+    <extension name='adaptivesearchsolr' />
 
     <extension name='promotionengineservices' />
     <extension name='promotionenginebackoffice' />
@@ -31,10 +39,13 @@
     <extension name='droolsruleengineservices' />
     <extension name='couponservices' />
     <extension name='couponbackoffice' />
-
     <extension name='mediaconversion' />
-    <extension name='mediaconversionbackoffice' />
+
     <extension name='processing' />
+    <extension name='patches' />
+
+    <extension name='electronicsstore' />
+    <extension name='apparelstore' />
 
     <extension dir="${HYBRIS_BIN_DIR}/custom/saptraining/saptrainingcore"/>
     <extension dir="${HYBRIS_BIN_DIR}/custom/saptraining/saptrainingbackoffice"/>
@@ -43,5 +54,6 @@
     <extension dir="${HYBRIS_BIN_DIR}/custom/saptraining/saptraininginitialdata"/>
     <extension dir="${HYBRIS_BIN_DIR}/custom/saptraining/saptrainingstorefront"/>
 
+    <extension name='questions' />
   </extensions>
 </hybrisconfig>

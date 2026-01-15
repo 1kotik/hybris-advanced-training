@@ -1,0 +1,15 @@
+$productCatalog=electronicsProductCatalog
+$contentCatalog=electronicsContentCatalog
+$productCV=catalogversion(catalog(id[default=$productCatalog]),version[default='Online'])[unique=true,default=$productCatalog:Online]
+$contentCV=catalogversion(catalog(id[default=$contentCatalog]),version[default='Online'])[unique=true,default=$contentCatalog:Online]
+
+INSERT_UPDATE Question;code[unique=true];question;answer;questionCustomer(uid);answerCustomer(uid);product(code, $productCV)
+;q003;test1_q;test1_a;anonymous;anonymous;443175
+;q004;test2_q;test2_a;anonymous;anonymous;443175
+;q005;test3_q;test3_a;anonymous;anonymous;443175
+
+INSERT_UPDATE QuestionsCMSComponent;uid[unique=true];numberOfQuestionsToShow;font;catalogVersion(catalog(id), version)[unique=true]
+;QuestionsComponent;5;14;electronicsContentCatalog:Online
+
+INSERT_UPDATE ContentSlot;uid[unique=true];cmsComponents(uid, catalogVersion(catalog(id), version))[mode=append];catalogVersion(catalog(id), version)[unique=true]
+;TabsSlot;QuestionsComponent:electronicsContentCatalog:Online;electronicsContentCatalog:Online

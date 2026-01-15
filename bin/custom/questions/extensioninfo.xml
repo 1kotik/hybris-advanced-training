@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
+    <extension abstractclassprefix="Generated" classprefix="Questions" description="questions extension" managername="QuestionsManager" managersuperclass="de.hybris.platform.jalo.extension.Extension" name="questions">
+        <requires-extension name="addonsupport"/>
+        <requires-extension name="cms2"/>
+        <requires-extension name="cmsfacades"/>
+        <requires-extension name="acceleratorcms"/>
+        <coremodule generated="true" manager="by.kotik.questions.jalo.QuestionsManager" packageroot="by.kotik.questions"/>
+        <meta key="classpathgen" value="false"/>
+        <meta key="deprecated" value="true"/>
+    </extension>
+</extensioninfo>
