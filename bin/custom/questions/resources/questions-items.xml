@@ -3,7 +3,7 @@
        xsi:noNamespaceSchemaLocation="items.xsd">
     <relations>
         <relation code="Question2Product" localized="false">
-            <sourceElement qualifier="questions" type="Question" collectiontype="list" cardinality="many"
+            <sourceElement qualifier="questions" type="Question" collectiontype="set" cardinality="many"
                            ordered="false">
                 <modifiers read="true" write="true" optional="true" search="true"/>
             </sourceElement>
@@ -15,6 +15,17 @@
     <itemtypes>
         <itemtype code="Question" autocreate="true" generate="true">
             <deployment table="Questions" typecode="10102"/>
+            <custom-properties>
+                <property name="catalogItemType">
+                    <value>Boolean.TRUE</value>
+                </property>
+                <property name="catalogVersionAttributeQualifier">
+                    <value>"catalogVersion"</value>
+                </property>
+                <property name="uniqueKeyAttributeQualifier">
+                    <value>"code"</value>
+                </property>
+            </custom-properties>
             <attributes>
                 <attribute qualifier="code" type="java.lang.String">
                     <description>short unique question code</description>
@@ -40,6 +51,10 @@
                     <description>who answered the question</description>
                     <persistence type="property"/>
                     <modifiers optional="true"/>
+                </attribute>
+                <attribute qualifier="catalogVersion" type="CatalogVersion">
+                    <persistence type="property"/>
+                    <modifiers unique="true" read="true" write="true" search="true" optional="false" initial="true"/>
                 </attribute>
             </attributes>
         </itemtype>

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import questions.data.QuestionData;
 
 import java.util.List;
+import java.util.Set;
 
 @Component("productQuestionDataPopulator")
 public class ProductQuestionDataPopulator implements Populator<ProductModel, ProductData> {
@@ -26,7 +27,7 @@ public class ProductQuestionDataPopulator implements Populator<ProductModel, Pro
         if (productModel == null || productData == null) {
             return;
         }
-        final List<QuestionModel> questionModelList = productModel.getQuestions();
+        final Set<QuestionModel> questionModelList = productModel.getQuestions();
         final List<QuestionData> questionDataList = questionModelList.stream()
                 .map(this::getQuestionData)
                 .toList();

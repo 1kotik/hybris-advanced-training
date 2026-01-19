@@ -45,7 +45,6 @@
     <extension name='patches' />
 
     <extension name='electronicsstore' />
-    <extension name='apparelstore' />
 
     <extension dir="${HYBRIS_BIN_DIR}/custom/saptraining/saptrainingcore"/>
     <extension dir="${HYBRIS_BIN_DIR}/custom/saptraining/saptrainingbackoffice"/>
