@@ -12,6 +12,11 @@
 /bin/modules/
 /bin/platform/
 
+/bin/custom/*/lib/
+/bin/custom/**/classes/
+/bin/custom/*/gensrc/
+/bin/custom/*/.settings/
+/bin/custom/**/jalo/
 /bin/custom/saptraining/*/lib/
 /bin/custom/saptraining/**/classes/
 /bin/custom/saptraining/*/gensrc/
@@ -34,6 +39,9 @@ rebel.xml
 *.springBeans
 *launch
 *.class
+*.iml
+*.prefs
 dummy.txt
 sap-hybris-platform.png
 platformhome.properties
+*.txt
