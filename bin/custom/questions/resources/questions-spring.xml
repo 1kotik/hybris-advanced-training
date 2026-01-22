@@ -42,4 +42,15 @@
 		<property name="add" ref="productQuestionDataPopulator"/>
 	</bean>
 
+	<bean id="productQuestionCountValueResolver"
+		  class="by.kotik.questions.search.solrfacetsearch.provider.ProductQuestionCountValueResolver"
+		  parent="abstractValueResolver">
+	</bean>
+
+	<alias name="productQuestionCountPopulator" alias="commerceSearchResultProductPopulator"/>
+	<bean id="productQuestionCountPopulator"
+		  class="by.kotik.questions.search.solrfacetsearch.populator.ProductQuestionCountPopulator"
+		  parent="variantCommerceSearchResultProductPopulator">
+	</bean>
+
 </beans>
