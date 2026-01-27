@@ -1,6 +1,7 @@
 $productCatalog=electronicsProductCatalog
 $contentCatalog=electronicsContentCatalog
 $productCV=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$solrIndexedType=electronicsProductType
 
 INSERT_UPDATE Question;code[unique=true];question;answer;questionCustomer(uid);answerCustomer(uid);product(code, $productCV);catalogVersion(catalog(id), version)[unique=true]
 ;q003;test1_q;test1_a;anonymous;anonymous;443175;electronicsProductCatalog:Staged
@@ -12,3 +13,58 @@ INSERT_UPDATE QuestionsCMSComponent;uid[unique=true];numberOfQuestionsToShow;fon
 
 INSERT_UPDATE ContentSlot;uid[unique=true];cmsComponents(uid, catalogVersion(catalog(id), version))[mode=append];catalogVersion(catalog(id), version)[unique=true]
 ;TabsSlot;QuestionsComponent:electronicsContentCatalog:Staged;electronicsContentCatalog:Staged
+
+INSERT_UPDATE SolrIndexedProperty; solrIndexedType(identifier)[unique = true]; name[unique = true]; type(code); multiValue; priority; facet ; facetType(code); facetSort(code); useForAutocomplete; fieldValueProvider                ; valueProviderParameter
+                                 ; $solrIndexedType                          ; questionCount      ; int       ; false     ; 1000    ; true  ; MultiSelectOr  ; Alpha          ; false             ; productQuestionCountValueResolver ;
+                                 ; $solrIndexedType                          ; questionCountValue ; int       ; false     ; 1000    ; false ;                ;                ; false             ; productQuestionCountValueResolver ;
+
+
+INSERT_UPDATE SolrValueRangeSet; name[unique = true]           ; type; indexedProperties(name)
+                               ; electronicsQuestionCountRange ; int ; questionCount
+
+INSERT_UPDATE SolrValueRange; name[unique = true]; from; to      ; solrValueRangeSet(name)
+                            ; 0q                 ; 0   ; 0       ; electronicsQuestionCountRange
+                            ; 1q                 ; 1   ; 1       ; electronicsQuestionCountRange
+                            ; 2q                 ; 2   ; 2       ; electronicsQuestionCountRange
+                            ; 3q                 ; 3   ; 3       ; electronicsQuestionCountRange
+                            ; 4q                 ; 4   ; 4       ; electronicsQuestionCountRange
+                            ; 5+q                ; 5   ; 9999999 ; electronicsQuestionCountRange
+
+INSERT_UPDATE SolrSearchQueryProperty; searchQueryTemplate(name, indexedType(identifier))[unique = true]; indexedProperty(name, solrIndexedType(identifier))[unique = true]; facet; facetType(code); includeInResponse
+                                     ; DEFAULT:$solrIndexedType                                         ; questionCount:$solrIndexedType                                   ; true ; MultiSelectOr  ; true
+
+INSERT_UPDATE SolrSort; name[lang = en] ; indexedType(identifier)[unique = true]; code[unique = true] ; useBoost
+                      ; Least Discussed ; $solrIndexedType                      ; question-count-asc  ; true
+                      ; Most Discussed  ; $solrIndexedType                      ; question-count-desc ; true
+
+INSERT_UPDATE SolrSortField; sort(indexedType(identifier), code)[unique = true]; fieldName[unique = true]; ascending
+                           ; $solrIndexedType:question-count-asc               ; questionCountValue      ; true
+                           ; $solrIndexedType:question-count-desc              ; questionCountValue      ; false
+
+INSERT_UPDATE ProductPriceGroup; code[unique = true]
+                               ; cheapFlashMemoryPriceGroup
+
+INSERT_UPDATE Product; code[unique = true]; catalogVersion(catalog(id), version)[unique = true]; europe1pricefactory_ppg(code)
+                     ; 443175             ; $productCatalog:Staged                             ; cheapFlashMemoryPriceGroup
+                     ; 872912             ; $productCatalog:Staged                             ; cheapFlashMemoryPriceGroup
+                     ; 1322041            ; $productCatalog:Staged                             ; cheapFlashMemoryPriceGroup
+                     ; 1366001            ; $productCatalog:Staged                             ; cheapFlashMemoryPriceGroup
+                     ; 2938458            ; $productCatalog:Staged                             ; cheapFlashMemoryPriceGroup
+                     ; 1322031            ; $productCatalog:Staged                             ; cheapFlashMemoryPriceGroup
+
+INSERT_UPDATE PriceRow; currency(isocode)[unique = true]; giveAwayPrice; minqtd[unique = true]; price; unit(code); unitFactor; pg(code)[unique = true]
+                      ; USD                             ; false        ; 1                    ; 10   ; pieces    ; 1         ; cheapFlashMemoryPriceGroup
+                      ; USD                             ; false        ; 50                   ; 5    ; pieces    ; 1         ; cheapFlashMemoryPriceGroup
+                      ; USD                             ; false        ; 100                  ; 3    ; pieces    ; 1         ; cheapFlashMemoryPriceGroup
+
+INSERT_UPDATE PriceRow; currency(isocode)[unique = true][default = USD]; productId[unique = true]; startTime[dateformat = dd.MM.yyyy][default = 20.01.2026]; endTime[dateformat = dd.MM.yyyy][default = 21.01.2026]
+                      ;                                                ; 443175                  ;                                                         ;
+                      ;                                                ; 872912                  ;                                                         ;
+                      ;                                                ; 1322041                 ;                                                         ;
+                      ;                                                ; 1366001                 ;                                                         ;
+                      ;                                                ; 2938458                 ;                                                         ;
+                      ;                                                ; 1322031                 ;                                                         ;
+
+INSERT_UPDATE PriceRow; currency(isocode)[unique = true]; giveAwayPrice; minqtd[unique = true]; price; unit(code); unitFactor; product(code, $productCV)[unique = true]
+                      ; USD                             ; false        ; 20                   ; 30   ; pieces    ; 1         ; 4852405
+                      ; USD                             ; false        ; 40                   ; 25   ; pieces    ; 1         ; 4852405
