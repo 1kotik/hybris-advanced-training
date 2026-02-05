@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:file="http://www.springframework.org/schema/integration/file"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/integration
+	http://www.springframework.org/schema/integration/spring-integration.xsd
+	http://www.springframework.org/schema/integration/file
+	http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+
+    <bean id="baseDirectoryElectronicsStocks" class="java.lang.String">
+        <constructor-arg value="#{baseDirectory}/${tenantId}/electronics-stocks" />
+    </bean>
+
+    <file:inbound-channel-adapter id="batchFilesElectronicsStocks" directory="#{baseDirectoryElectronicsStocks}"
+                                  filename-regex="^(.*)-(\d+)\.csv">
+        <int:poller fixed-rate="1000" />
+    </file:inbound-channel-adapter>
+
+    <file:outbound-gateway request-channel="batchFilesElectronicsStocks" reply-channel="batchFilesElectronicsStocksProc"
+                           directory="#{baseDirectoryElectronicsStocks}/processing" delete-source-files="true" />
+
+    <int:service-activator input-channel="batchFilesElectronicsStocksProc"
+                           output-channel="batchFilesHeaderInitElectronics"
+                           ref="electronicsStocksHeaderSetupTask"
+                           method="execute" />
+
+    <bean id="electronicsStocksHeaderSetupTask" class="de.hybris.platform.acceleratorservices.dataimport.batch.task.HeaderSetupTask">
+        <property name="catalog" value="electronicsProductCatalog" />
+        <property name="net" value="false" />
+        <property name="storeBaseDirectory" ref="baseDirectoryElectronicsStocks" />
+    </bean>
+
+    <int:service-activator input-channel="batchFilesHeaderInitElectronics"
+                           output-channel="batchFilesTran"
+                           ref="electronicsBatchTransformerTask"
+                           method="execute" />
+
+    <bean id="electronicsBatchTransformerTask"
+          class="de.hybris.platform.acceleratorservices.dataimport.batch.task.ImpexTransformerTask"
+          init-method="initConvertersMap">
+        <property name="fieldSeparator" value=";" />
+        <property name="encoding" value="UTF-8" />
+        <property name="linesToSkip" value="0"/>
+        <property name="cleanupHelper" ref="cleanupHelper" />
+    </bean>
+
+    <bean id="stockLevelConverter" class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.impl.DefaultImpexConverter">
+        <property name="header">
+            <value>
+                INSERT_UPDATE StockLevel;productCode[unique=true];warehouse(code)[unique=true];available;maxPreOrder[default=1];maxStockLevelHistoryCount[default=-1];overSelling[default=0];preOrder[default=0];reserved[default=0]
+            </value>
+        </property>
+        <property name="impexRow">
+            <value>;{+0};{+1};{2}</value>
+        </property>
+    </bean>
+
+    <bean id="stockLevelConverterMapping"
+          class="de.hybris.platform.acceleratorservices.dataimport.batch.converter.mapping.impl.DefaultConverterMapping"
+          p:mapping="stockLevel"
+          p:converter-ref="stockLevelConverter"/>
+
+    <aop:config proxy-target-class="true">
+        <aop:aspect ref="tenantActivationAspect">
+            <aop:around pointcut="bean(electronicsBatchTransformerTask)" method="execute" />
+        </aop:aspect>
+    </aop:config>
+
+</beans>

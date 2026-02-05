@@ -12,4 +12,11 @@
 		<property name="questions" type="java.util.List&lt;questions.data.QuestionData&gt;"/>
 		<property name="questionCount" type="Integer"/>
 	</bean>
+	<bean class="questions.data.QuestionEmailData">
+		<property name="questionId" type="String"/>
+		<property name="productId" type="String"/>
+		<property name="productName" type="String"/>
+		<property name="question" type="String"/>
+		<property name="answer" type="String"/>
+	</bean>
 </beans>

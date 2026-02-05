@@ -16,6 +16,8 @@
     <context:annotation-config/>
 	<context:component-scan base-package="by.kotik.questions" />
 
+	<import resource="classpath:/questions/integration/hot-folder-store-electronics-stocks.xml"/>
+
 	<!-- Expose /acceleratoraddon/web/webroot/WEB-INF/messages/base.js.properties  resource bundle as javascript variables -->
 	<bean id="defaultQuestionsJavaScriptMessageResourceAccessor" parent="abstractJavaScriptMessageResourceAccessor">
 		<property name="addOnName" value="questions"/>

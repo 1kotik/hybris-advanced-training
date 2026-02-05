@@ -2,6 +2,9 @@ $productCatalog=electronicsProductCatalog
 $contentCatalog=electronicsContentCatalog
 $productCV=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
 $solrIndexedType=electronicsProductType
+$contentCV=catalogversion(catalog(id[default=$contentCatalog]),version[default='Staged'])[unique=true,default=$contentCatalog:Staged]
+$emailPackageName=by.kotik.questions.context.email
+$emailResource=jar:by.kotik.saptraining.core.setup.CoreSystemSetup&/questions/import/emails
 
 INSERT_UPDATE Question;code[unique=true];question;answer;questionCustomer(uid);answerCustomer(uid);product(code, $productCV);catalogVersion(catalog(id), version)[unique=true]
 ;q003;test1_q;test1_a;anonymous;anonymous;443175;electronicsProductCatalog:Staged
@@ -68,3 +71,89 @@ INSERT_UPDATE PriceRow; currency(isocode)[unique = true][default = USD]; product
 INSERT_UPDATE PriceRow; currency(isocode)[unique = true]; giveAwayPrice; minqtd[unique = true]; price; unit(code); unitFactor; product(code, $productCV)[unique = true]
                       ; USD                             ; false        ; 20                   ; 30   ; pieces    ; 1         ; 4852405
                       ; USD                             ; false        ; 40                   ; 25   ; pieces    ; 1         ; 4852405
+
+INSERT_UPDATE PromotionSourceRule; code[unique = true]                      ; name                                        ; website(identifier)   ; priority; ruleGroup(code)           ; conditions; actions; messageFired
+                                 ; "10_percent_cart_discount_above_100_usd" ; "Get 10% cart discount for order over $100" ; "electronicsPromoGrp" ; 20      ; "orderPromotionRuleGroup" ; "[
+  {
+    ""definitionId"": ""y_cart_total"",
+    ""parameters"": {
+      ""value"": {
+        ""uuid"": ""7f1adcba-f75c-4775-b8da-d67815b34082"",
+        ""type"": ""Map(ItemType(Currency),java.math.BigDecimal)"",
+        ""value"": {
+          ""USD"": 100
+        }
+      },
+      ""operator"": {
+        ""uuid"": ""67136d56-8c1b-4e82-a735-2ab1be26c64d"",
+        ""type"": ""Enum(de.hybris.platform.ruledefinitions.AmountOperator)"",
+        ""value"": ""GREATER_THAN""
+      }
+    },
+    ""children"": []
+  }
+]"        ; "[
+  {
+    ""definitionId"": ""y_order_percentage_discount"",
+    ""parameters"": {
+      ""value"": {
+        ""uuid"": ""5777a732-2459-4d43-8fd2-dade01ef9c70"",
+        ""type"": ""java.math.BigDecimal"",
+        ""value"": 10
+      }
+    }
+  }
+]"     ; "Buy over {7f1adcba-f75c-4775-b8da-d67815b34082} get {5777a732-2459-4d43-8fd2-dade01ef9c70}% discount on cart"
+
+INSERT_UPDATE SingleCodeCoupon; couponId[unique = true]; name                ; maxRedemptionsPerCustomer; maxTotalRedemptions; active
+                              ; SAP2026                ; $10 discount coupon ; 1                        ; 1000               ; true
+
+INSERT_UPDATE PromotionSourceRule; code[unique = true]                    ; name                                         ; website(identifier)   ; priority; ruleGroup(code)           ; conditions; actions; messageFired
+                                 ; "fixed_$10_cart_discount_using_coupon" ; "Get $10 cart discount using coupon SAP2026" ; "electronicsPromoGrp" ; 200     ; "orderPromotionRuleGroup" ; "[
+  {
+    ""definitionId"": ""y_qualifying_coupons"",
+    ""parameters"": {
+      ""coupons"": {
+        ""uuid"": ""fcc819a6-7120-4a88-9f8a-b38c52da6fb3"",
+        ""type"": ""List(ItemType(AbstractCoupon))"",
+        ""value"": [
+          ""SAP2026""
+        ]
+      }
+    },
+    ""children"": []
+  }
+]"        ; "[
+  {
+    ""definitionId"": ""y_order_fixed_discount"",
+    ""parameters"": {
+      ""value"": {
+        ""uuid"": ""ee5365ec-da18-4a4c-ae0d-1d788699a72c"",
+        ""type"": ""Map(ItemType(Currency),java.math.BigDecimal)"",
+        ""value"": {
+          ""USD"": 10
+        }
+      }
+    }
+  }
+]"     ; "Coupon {fcc819a6-7120-4a88-9f8a-b38c52da6fb3}: {ee5365ec-da18-4a4c-ae0d-1d788699a72c} cart discount"
+
+INSERT_UPDATE ServicelayerJob; code[unique = true]             ; SpringId
+                             ; startQuestionEmailingProcessJob ; startQuestionEmailingProcessJob
+
+INSERT_UPDATE CronJob; code[unique = true]                 ; job(code)                       ; singleExecutable; sessionLanguage(isocode)
+                     ; startQuestionEmailingProcessCronJob ; startQuestionEmailingProcessJob ; false           ; en
+
+INSERT_UPDATE Trigger; cronjob(code)[unique = true]        ; cronExpression
+                     ; startQuestionEmailingProcessCronJob ; 0 0 9 ? * *
+
+
+INSERT_UPDATE RendererTemplate; code[unique = true]     ; contextClass                            ; templateScript[lang = en, translator = de.hybris.platform.commerceservices.impex.impl.FileLoaderValueTranslator]; rendererType(code)[default = 'velocity']
+                              ; email-questions-body    ; $emailPackageName.QuestionsEmailContext ; $emailResource/email-questionsBody.vm                                                                           ;
+                              ; email-questions-subject ; $emailPackageName.QuestionsEmailContext ; $emailResource/email-questionsSubject.vm                                                                        ;
+
+INSERT_UPDATE EmailPageTemplate; $contentCV[unique = true]; uid[unique = true]     ; active; frontendTemplateName; subject(code)           ; htmlTemplate(code)   ; restrictedPageTypes(code)
+                               ;                          ; QuestionsEmailTemplate ; true  ; questionsEmail      ; email-questions-subject ; email-questions-body ; EmailPage
+
+INSERT_UPDATE EmailPage; $contentCV[unique = true]; uid[unique = true]; masterTemplate(uid, $contentCV); approvalStatus(code)[default = 'approved']
+                       ;                          ; QuestionsEmail    ; QuestionsEmailTemplate         ;

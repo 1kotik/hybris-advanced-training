@@ -5,8 +5,10 @@
         <requires-extension name="cms2"/>
         <requires-extension name="cmsfacades"/>
         <requires-extension name="acceleratorcms"/>
+        <requires-extension name="saptrainingfacades"/>
         <coremodule generated="true" manager="by.kotik.questions.jalo.QuestionsManager" packageroot="by.kotik.questions"/>
         <meta key="classpathgen" value="false"/>
         <meta key="deprecated" value="true"/>
+        <meta key="backoffice-module" value="true"/>
     </extension>
 </extensioninfo>
