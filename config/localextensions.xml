@@ -36,6 +36,7 @@
     <extension name='promotionenginebackoffice' />
     <extension name='ruleengine' />
     <extension name='ruleenginebackoffice' />
+    <extension name="rulebuilderbackoffice"/>
     <extension name='droolsruleengineservices' />
     <extension name='couponservices' />
     <extension name='couponbackoffice' />

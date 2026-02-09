@@ -20,7 +20,7 @@ public class ProductQuestionCountValueResolver extends AbstractValueResolver<Pro
         int questionCount = 0;
         Set<QuestionModel> questions = productModel.getQuestions();
         if (questions != null) {
-            questionCount = questions.size();
+            questionCount = (int) questions.stream().filter(QuestionModel::getApproved).count();
         }
         inputDocument.addField(indexedProperty, questionCount, valueResolverContext.getFieldQualifier());
     }

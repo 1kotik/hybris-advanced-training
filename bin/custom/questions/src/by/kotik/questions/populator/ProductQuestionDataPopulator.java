@@ -29,6 +29,7 @@ public class ProductQuestionDataPopulator implements Populator<ProductModel, Pro
         }
         final Set<QuestionModel> questionModelList = productModel.getQuestions();
         final List<QuestionData> questionDataList = questionModelList.stream()
+                .filter(QuestionModel::getApproved)
                 .map(this::getQuestionData)
                 .toList();
         productData.setQuestions(questionDataList);
@@ -39,8 +40,12 @@ public class ProductQuestionDataPopulator implements Populator<ProductModel, Pro
         questionData.setId(questionModel.getCode());
         questionData.setQuestion(questionModel.getQuestion());
         questionData.setAnswer(questionModel.getAnswer());
-        final CustomerData questionCustomer = customerConverter.convert(questionModel.getQuestionCustomer());
-        final CustomerData answerCustomer = customerConverter.convert(questionModel.getAnswerCustomer());
+        CustomerModel questionCustomerModel = questionModel.getQuestionCustomer();
+        CustomerModel answerCustomerModel = questionModel.getAnswerCustomer();
+        final CustomerData questionCustomer = questionCustomerModel != null
+                ? customerConverter.convert(questionCustomerModel) : new CustomerData();
+        final CustomerData answerCustomer = answerCustomerModel != null
+                ? customerConverter.convert(answerCustomerModel) : new CustomerData();
         questionData.setQuestionCustomer(questionCustomer);
         questionData.setAnswerCustomer(answerCustomer);
         return questionData;
