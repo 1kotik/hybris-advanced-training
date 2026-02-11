@@ -57,7 +57,17 @@
 			</div>
 		</div>
 
-		<p>${product.questionCount} questions</p>
+		<c:if test="${not empty product.questionCount and product.questionCount gt 0}">
+			<div class="product__listing--questions" style="display: inline-block; margin-left: 6px;">
+				<img src="${originalContextPath}/_ui/addons/questions/responsive/common/images/questionCountIcon.svg"
+					 alt="Questions"
+					 class="product__listing--question-icon"
+					 style="width: 24px; height: 24px; display: inline-block; vertical-align: middle;"/>
+				<span class="product__listing--question-count" style="margin-left: 4px;">
+						${product.questionCount}
+				</span>
+			</div>
+		</c:if>
 
 	</ycommerce:testId>
 </li>

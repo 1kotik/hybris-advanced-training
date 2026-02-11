@@ -14,9 +14,6 @@ INSERT_UPDATE Question;code[unique=true];question;answer;questionCustomer(uid);a
 INSERT_UPDATE QuestionsCMSComponent;uid[unique=true];numberOfQuestionsToShow;font;catalogVersion(catalog(id), version)[unique=true]
 ;QuestionsComponent;5;14;electronicsContentCatalog:Staged
 
-INSERT_UPDATE ContentSlot;uid[unique=true];cmsComponents(uid, catalogVersion(catalog(id), version))[mode=append];catalogVersion(catalog(id), version)[unique=true]
-;TabsSlot;QuestionsComponent:electronicsContentCatalog:Staged;electronicsContentCatalog:Staged
-
 INSERT_UPDATE SolrIndexedProperty; solrIndexedType(identifier)[unique = true]; name[unique = true]; type(code); multiValue; priority; facet ; facetType(code); facetSort(code); useForAutocomplete; fieldValueProvider                ; valueProviderParameter
                                  ; $solrIndexedType                          ; questionCount      ; int       ; false     ; 1000    ; true  ; MultiSelectOr  ; Alpha          ; false             ; productQuestionCountValueResolver ;
                                  ; $solrIndexedType                          ; questionCountValue ; int       ; false     ; 1000    ; false ;                ;                ; false             ; productQuestionCountValueResolver ;
@@ -157,3 +154,12 @@ INSERT_UPDATE EmailPageTemplate; $contentCV[unique = true]; uid[unique = true]  
 
 INSERT_UPDATE EmailPage; $contentCV[unique = true]; uid[unique = true]; masterTemplate(uid, $contentCV); approvalStatus(code)[default = 'approved']
                        ;                          ; QuestionsEmail    ; QuestionsEmailTemplate         ;
+
+INSERT_UPDATE ContentSlotName; name[unique = true]; template(uid, $contentCV)[unique = true][default = 'ProductDetailsPageTemplate']; validComponentTypes(code); compTypeGroup(code)
+                             ; QuestionsSection   ;                                                                                 ; QuestionsCMSComponent    ; wide
+
+INSERT_UPDATE ContentSlot; $contentCV[unique = true]; uid[unique = true]   ; name              ; active; cmsComponents(uid, $contentCV)
+                         ;                          ; QuestionsSectionSlot ; Questions Section ; true  ; QuestionsComponent
+
+INSERT_UPDATE ContentSlotForTemplate; $contentCV[unique = true]; uid[unique = true]              ; position[unique = true]; pageTemplate(uid, $contentCV)[unique = true][default = 'ProductDetailsPageTemplate']; contentSlot(uid, $contentCV)[unique = true]; allowOverwrite
+                                    ;                          ; QuestionsSection-ProductDetails ; QuestionsSection       ;                                                                                     ; QuestionsSectionSlot                       ; true
