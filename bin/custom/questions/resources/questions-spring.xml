@@ -63,4 +63,20 @@
 		  parent="abstractEmailContext" scope="prototype" >
 		<property name="questionFacade" ref="defaultQuestionFacade"/>
 	</bean>
+
+	<bean parent="modifyPopulatorList">
+		<property name="list" ref="productConverter"/>
+		<property name="add" ref="productWarrantyPopulator"/>
+	</bean>
+
+	<bean id="productWarrantyYearsValueResolver"
+		  class="by.kotik.questions.search.solrfacetsearch.provider.ProductWarrantyYearsValueResolver"
+		  parent="abstractValueResolver">
+	</bean>
+
+	<alias name="productWarrantyYearsValuePopulator" alias="commerceSearchResultProductPopulator"/>
+	<bean id="productWarrantyYearsValuePopulator"
+		  class="by.kotik.questions.search.solrfacetsearch.populator.ProductWarrantyYearsValuePopulator"
+		  parent="variantCommerceSearchResultProductPopulator">
+	</bean>
 </beans>
