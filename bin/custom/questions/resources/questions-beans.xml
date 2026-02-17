@@ -11,6 +11,7 @@
 	<bean class="de.hybris.platform.commercefacades.product.data.ProductData">
 		<property name="questions" type="java.util.List&lt;questions.data.QuestionData&gt;"/>
 		<property name="questionCount" type="Integer"/>
+		<property name="warrantyYears" type="Integer"/>
 	</bean>
 	<bean class="questions.data.QuestionEmailData">
 		<property name="questionId" type="String"/>

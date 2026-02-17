@@ -163,3 +163,40 @@ INSERT_UPDATE ContentSlot; $contentCV[unique = true]; uid[unique = true]   ; nam
 
 INSERT_UPDATE ContentSlotForTemplate; $contentCV[unique = true]; uid[unique = true]              ; position[unique = true]; pageTemplate(uid, $contentCV)[unique = true][default = 'ProductDetailsPageTemplate']; contentSlot(uid, $contentCV)[unique = true]; allowOverwrite
                                     ;                          ; QuestionsSection-ProductDetails ; QuestionsSection       ;                                                                                     ; QuestionsSectionSlot                       ; true
+
+INSERT_UPDATE ProductWarrantyCMSComponent; $contentCV[unique = true]; uid[unique = true]       ; name
+                                         ;                          ; ProductWarrantyComponent ; Product Warranty Component
+
+INSERT_UPDATE ContentSlotName; name[unique = true]    ; template(uid, $contentCV)[unique = true][default = 'ProductDetailsPageTemplate']; validComponentTypes(code)   ; compTypeGroup(code)
+                             ; ProductWarrantySection ;                                                                                 ; ProductWarrantyCMSComponent ; wide
+
+INSERT_UPDATE ContentSlot; $contentCV[unique = true]; uid[unique = true]         ; name                     ; active; cmsComponents(uid, $contentCV)
+                         ;                          ; ProductWarrantySectionSlot ; Product Warranty Section ; true  ; ProductWarrantyComponent
+
+INSERT_UPDATE ContentSlotForTemplate; $contentCV[unique = true]; uid[unique = true]                    ; position[unique = true]; pageTemplate(uid, $contentCV)[unique = true][default = 'ProductDetailsPageTemplate']; contentSlot(uid, $contentCV)[unique = true]; allowOverwrite
+                                    ;                          ; ProductWarrantySection-ProductDetails ; ProductWarrantySection ;                                                                                     ; ProductWarrantySectionSlot                 ; true
+
+INSERT_UPDATE Product; code[unique = true]; $productCV[unique = true]; warrantyYears
+                     ; 443175             ;                          ; 0
+                     ; 872912             ;                          ; 1
+                     ; 1322041            ;                          ; 2
+                     ; 1366001            ;                          ; 3
+                     ; 2938458            ;                          ; 5
+                     ; 1322031            ;                          ; 12
+
+INSERT_UPDATE SolrIndexedProperty; solrIndexedType(identifier)[unique = true]; name[unique = true]; type(code); multiValue; priority; facet ; facetType(code); facetSort(code); useForAutocomplete; fieldValueProvider                ; valueProviderParameter
+                                 ; $solrIndexedType                          ; warrantyYears      ; int       ; false     ; 1000    ; true  ; MultiSelectOr  ; Alpha          ; false             ; productWarrantyYearsValueResolver ;
+                                 ; $solrIndexedType                          ; warrantyYearsValue ; int       ; false     ; 1000    ; false ;                ;                ; false             ; productWarrantyYearsValueResolver ;
+
+
+INSERT_UPDATE SolrValueRangeSet; name[unique = true]                  ; type; indexedProperties(name)
+                               ; electronicsProductWarrantyYearsRange ; int ; warrantyYears
+
+INSERT_UPDATE SolrValueRange; name[unique = true]; from; to     ; solrValueRangeSet(name)
+                            ; 0                  ; 0   ; 0      ; electronicsProductWarrantyYearsRange
+                            ; 1                  ; 1   ; 1      ; electronicsProductWarrantyYearsRange
+                            ; 2                  ; 2   ; 2      ; electronicsProductWarrantyYearsRange
+                            ; 3                  ; 3   ; 3      ; electronicsProductWarrantyYearsRange
+                            ; 4-6                ; 4   ; 6      ; electronicsProductWarrantyYearsRange
+                            ; 7-9                ; 7   ; 9      ; electronicsProductWarrantyYearsRange
+                            ; 10+                ; 10  ; 999999 ; electronicsProductWarrantyYearsRange

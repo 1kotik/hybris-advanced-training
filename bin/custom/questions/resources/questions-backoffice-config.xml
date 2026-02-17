@@ -90,4 +90,20 @@
             </editorArea:tab>
         </editorArea:editorArea>
     </context>
+
+    <context type="Product" component="editor-area">
+        <editorArea:editorArea>
+            <editorArea:essentials>
+                <editorArea:essentialSection name="hmc.essential">
+                    <editorArea:attribute qualifier="warrantyYears"/>
+                </editorArea:essentialSection>
+            </editorArea:essentials>
+
+            <editorArea:tab name="hmc.tab.product.essentials">
+                <editorArea:section name="hmc.section.product.essentials">
+                    <editorArea:attribute qualifier="warrantyYears"/>
+                </editorArea:section>
+            </editorArea:tab>
+        </editorArea:editorArea>
+    </context>
 </config>
